@@ -3,9 +3,10 @@ package com.ShoppingCart.ShoppingCartDemo.service.product;
 import java.util.List;
 
 import com.ShoppingCart.ShoppingCartDemo.model.Product;
+import com.ShoppingCart.ShoppingCartDemo.request.AddProductRequest;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProduct(Long id);
     void updateProduct(Long id, Product product);

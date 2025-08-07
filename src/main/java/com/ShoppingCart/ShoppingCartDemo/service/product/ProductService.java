@@ -1,19 +1,46 @@
 package com.ShoppingCart.ShoppingCartDemo.service.product;
 
 import java.util.List;
+import java.util.Optional;
 
+
+import com.ShoppingCart.ShoppingCartDemo.exception.ProductNotFoundException;
+import com.ShoppingCart.ShoppingCartDemo.model.Category;
 import com.ShoppingCart.ShoppingCartDemo.model.Product;
+import com.ShoppingCart.ShoppingCartDemo.repository.CategoryRepository;
 import com.ShoppingCart.ShoppingCartDemo.repository.ProductRepository;
-import com.ShoppingCart.exception.ProductNotFoundException;
+import com.ShoppingCart.ShoppingCartDemo.request.AddProductRequest;
 
 public class ProductService implements IProductService {
     private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
 
-    // Implement the methods defined in IProductService interface
+    
     @Override
-    public Product addProduct(Product product) {
-        // Logic to add product
-        return null; // Placeholder return
+    public Product addProduct(AddProductRequest request) {
+        // check if the catefory if found in the DB
+        // If yes, set it as the new product's category
+        // If No, then save it as a new category
+        // The set as the new product category
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(() -> {
+                    Category newCategory = new Category(request.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
+        
+        request.setCategory(category);
+        return createProduct(request, category);
+    }
+
+    private Product createProduct(AddProductRequest request, Category category) {
+        return new Product(
+            request.getName(),
+            request.getBrand(),
+            request.getPrice(),
+            request.getDescription(),
+            request.getInventory(),
+            category
+        );
     }
 
     @Override
