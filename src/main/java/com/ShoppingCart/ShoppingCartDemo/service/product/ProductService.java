@@ -10,6 +10,7 @@ import com.ShoppingCart.ShoppingCartDemo.model.Product;
 import com.ShoppingCart.ShoppingCartDemo.repository.CategoryRepository;
 import com.ShoppingCart.ShoppingCartDemo.repository.ProductRepository;
 import com.ShoppingCart.ShoppingCartDemo.request.AddProductRequest;
+import com.ShoppingCart.ShoppingCartDemo.request.ProductUpdateRequest;
 
 public class ProductService implements IProductService {
     private ProductRepository productRepository;
@@ -66,6 +67,15 @@ public class ProductService implements IProductService {
             existingProduct.setBrand(product.getBrand());
             productRepository.save(existingProduct);
         });
+    }
+
+    private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
+        existingProduct.setName(request.getName());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setCategory(request.getCategory());
+        existingProduct.setBrand(request.getBrand());
+        return productRepository.save(existingProduct);
     }
 
 
